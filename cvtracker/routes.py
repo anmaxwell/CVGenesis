@@ -19,7 +19,7 @@ def login_page():
             attempted_username = request.form['username']
 
             if attempted_username in valid_user:
-            #if attempted_username = 'ania':
+
                 return redirect(url_for('menu'))
 				
             else:
@@ -31,11 +31,33 @@ def login_page():
         #flash(e)
         return render_template("errorlogin.html", error = error)  
 
+@app.route('/menu', methods=["GET","POST"])
+def menu():
+
+    if request.method == "POST":
+
+        selected = request.form.to_dict()
+
+        if "create" in selected:
+            print("success create")
+            return redirect(url_for('dataentry'))
+
+
+        if "update" in selected:
+            print("success update")
+            return redirect(url_for('dataedit'))
+
+		
+    else:
+        return render_template('cvmenu.html')
+
+
 @app.route('/dataentry')
 def dataentry():
-    #return "Ready to enter data"
-    return render_template('cventry.html')
+   return render_template('cventry.html')
 
-@app.route('/menu')
-def menu():
-    return render_template('cvmenu.html')
+
+@app.route('/dataedit')
+def dataedit():
+   return render_template('cvedit.html')
+    
