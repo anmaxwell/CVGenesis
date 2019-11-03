@@ -1,4 +1,5 @@
 from cvtracker import app
+from users import get_users
 from flask import render_template, request, redirect, url_for
 
 @app.route('/')
@@ -10,16 +11,16 @@ def index():
 def login_page():
 
     error = ''
+    valid_user = get_users()
+
     try:
          if request.method == "POST":
 		
             attempted_username = request.form['username']
 
-            #flash(attempted_username)
-
-            if attempted_username == "ania":
-                #return "Hurray"
-                return redirect(url_for('dataentry'))
+            if attempted_username in valid_user:
+            #if attempted_username = 'ania':
+                return redirect(url_for('menu'))
 				
             else:
                 error = "Invalid credentials. Try Again."
@@ -34,3 +35,7 @@ def login_page():
 def dataentry():
     #return "Ready to enter data"
     return render_template('cventry.html')
+
+@app.route('/menu')
+def menu():
+    return render_template('cvmenu.html')
