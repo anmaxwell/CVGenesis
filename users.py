@@ -1,13 +1,5 @@
-
-print("let's get started")
-
 def get_users():
 
-    f = open('users.txt', 'r')
-    users = f.readlines()
-    userlist = [elem.strip() for elem in users]
-    
-    f.close()
-
-
+    with open ("users.txt", "r") as f:
+        userlist = [elem.strip() for elem in f.readlines()]
     return userlist
