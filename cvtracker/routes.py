@@ -1,4 +1,5 @@
 from cvtracker import app
+from cvtracker.models import CV, Hirer, Role
 from users import get_users
 from flask import render_template, request, redirect, url_for
 
