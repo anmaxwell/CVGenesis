@@ -4,6 +4,7 @@ from users import get_users
 from flask import render_template, request, redirect, url_for
 
 @app.route('/')
+@app.route('/home')
 def index():
     return render_template('login.html')
 
@@ -27,15 +28,14 @@ def login_page():
     except Exception:
         return render_template("errorlogin.html", error = error)  
 
-@app.route('/menu')
-def menu():
-    return render_template('cvmenu.html')
-
-@app.route('/dataentry')
-def dataentry():
+@app.route('/cventry')
+def cventry():
    return render_template('cventry.html')
 
-@app.route('/dataedit')
-def dataedit():
+@app.route('/cvedit')
+def cvedit():
    return render_template('cvedit.html')
     
+@app.route('/mgrlist')
+def mgrlist():
+   return render_template('mgrlist.html')
