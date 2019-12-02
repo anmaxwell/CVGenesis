@@ -39,7 +39,8 @@ def cv_edit():
     
 @app.route('/mgrlist')
 def mgr_list():
-   return render_template('mgrlist.html')
+    posts = Hirer.query.order_by(Hirer.name)
+    return render_template('mgrlist.html', posts=posts)
 
 @app.route('/mgrentry', methods=['GET', 'POST'])
 def mgr_entry():

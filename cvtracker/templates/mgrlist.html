@@ -11,10 +11,17 @@
 {% endblock header %}
 
 {% block content %}
-  <div class="row justify-content-centre text-primary">
-    <div class="col-5 border">
-      Name
-    </div>
-  </div>
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+      </tr>
+    </thead>
+  </table>
+
+  {% for post in posts %}
+    <p>{{ post.name }}</p>
+  {% endfor %}
 {% endblock content %}
 
