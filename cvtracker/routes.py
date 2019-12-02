@@ -29,13 +29,13 @@ def login_page():
         return render_template("errorlogin.html", error = error)  
 
 @app.route('/cventry')
-def cventry():
+def cv_entry():
    return render_template('cventry.html')
 
 @app.route('/cvedit')
-def cvedit():
+def cv_edit():
    return render_template('cvedit.html')
     
 @app.route('/mgrlist')
-def mgrlist():
+def mgr_list():
    return render_template('mgrlist.html')
