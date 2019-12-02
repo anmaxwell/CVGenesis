@@ -13,15 +13,25 @@
 {% block content %}
 
 <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-      </tr>
-    </thead>
-  </table>
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+    
+    <td>
+      {% for post in posts %}
+      
+          <p>{{ post.name }}</p>
+      
+      {% endfor %}
+    </td>
+    <tr>
+  </tbody>
+</table>
 
-  {% for post in posts %}
-    <p>{{ post.name }}</p>
-  {% endfor %}
+
 {% endblock content %}
 
