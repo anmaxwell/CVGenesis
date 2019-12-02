@@ -1,11 +1,23 @@
 {% extends "layout.html" %}
+
+
+{% block header %}
+  <nav class="navbar navbar-light bg-light">
+    <span class="navbar-brand text-primary h1">Hiring Managers</span>
+    <form class="form-inline">
+      <a href="{{ url_for('index') }}" class="btn btn-outline-primary" role="add" >Add +</a>
+    </form>
+  </nav>
+{% endblock header %}
+
 {% block content %}
-
-        <article class="media content-section">
-          <div class="media-body">
-            <h2> hiring-manager</h2>
-          </div>
-        </article>
-
+<div class="row justify-content-around">
+    <div class="col-4">
+      One of two columns
+    </div>
+    <div class="col-4">
+      One of two columns
+    </div>
+  </div>
 {% endblock content %}
 
