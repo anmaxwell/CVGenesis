@@ -1,5 +1,6 @@
-from cvtracker import app
+from cvtracker import app, db
 from cvtracker.models import CV, Hirer, Role
+from cvtracker.forms import MgrEntry
 from users import get_users
 from flask import render_template, request, redirect, url_for
 
@@ -39,3 +40,14 @@ def cv_edit():
 @app.route('/mgrlist')
 def mgr_list():
    return render_template('mgrlist.html')
+
+@app.route('/mgrentry', methods=['GET', 'POST'])
+def mgr_entry():
+
+    form = MgrEntry()
+    if form.validate_on_submit():
+        post = Hirer(name=form.name.data)
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('mgr_entry'))
+    return render_template('mgrentry.html', form=form)
