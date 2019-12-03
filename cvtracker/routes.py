@@ -2,7 +2,7 @@ from cvtracker import app, db
 from cvtracker.models import CV, Hirer, Role
 from cvtracker.forms import MgrEntry
 from users import get_users
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, flash
 
 @app.route('/')
 @app.route('/home')
@@ -50,5 +50,6 @@ def mgr_entry():
         post = Hirer(name=form.name.data)
         db.session.add(post)
         db.session.commit()
+        flash("Successfully Added", 'success')
         return redirect(url_for('mgr_entry'))
     return render_template('mgrentry.html', form=form)
