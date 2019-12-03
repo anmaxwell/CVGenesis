@@ -1,6 +1,6 @@
 from cvtracker import app, db
 from cvtracker.models import CV, Hirer, Role
-from cvtracker.forms import MgrEntry
+from cvtracker.forms import MgrEntry, RoleEntry
 from users import get_users
 from flask import render_template, request, redirect, url_for, flash
 
@@ -58,3 +58,18 @@ def mgr_entry():
 def role_list():
     roles = Role.query.order_by(Role.status)
     return render_template('rolelist.html', roles=roles)
+
+@app.route('/roleentry', methods=['GET', 'POST'])
+def role_entry():
+
+    form = RoleEntry()
+    if form.validate_on_submit():
+        mgrname = form.manager.data
+        mgrid = Hirer.query.filter_by(name=mgrname).first().id
+        role = Role(title=form.title.data, status='active', role_notes=form.notes.data, date_opened=form.date_opened.data,
+                        manager=int(1), cvs='0')
+        db.session.add(role)
+        db.session.commit()
+        flash("Successfully Added", 'success')
+        return redirect(url_for('role_entry'))
+    return render_template('roleentry.html', form=form)
