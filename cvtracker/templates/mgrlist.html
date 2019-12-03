@@ -16,22 +16,27 @@
   <thead>
     <tr>
       <th scope="col">Name</th>
+      <th scope="col">Status</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-    
     <td>
-      {% for post in posts %}
+      {% for mgr in mgrs %}
       
-          <p>{{ post.name }}</p>
+          <p>{{ mgr.name }}</p>
       
       {% endfor %}
     </td>
+    <td>
+        {% for mgr in mgrs %}
+        
+            <p>{{ mgr.status }}</p>
+        
+        {% endfor %}
+      </td>
     <tr>
   </tbody>
 </table>
 
-
 {% endblock content %}
-

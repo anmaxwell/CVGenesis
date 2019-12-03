@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+
+{% block header %}
+  <nav class="navbar navbar-light bg-light">
+    <span class="navbar-brand text-primary h1">Roles</span>
+    <form class="form-inline">
+      <a href="{{ url_for('mgr_entry') }}" class="btn btn-outline-primary" role="add" >Add +</a>
+    </form>
+  </nav>
+{% endblock header %}
+
+{% block content %}
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Manager</th>
+      <th scope="col">Date</th>
+      <th scope="col">Status</th>
+      <th scope="col">Edit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <td>
+        {% for role in roles %}     
+            <p>{{ role.title }}</p>
+        {% endfor %}
+    </td>
+    <td>
+        {% for role in roles %} 
+            <p>{{ role.manager }}</p>
+        {% endfor %}
+      </td>
+    <td>
+        {% for role in roles %} 
+            <p>{{ role.date_opened }}</p>
+        {% endfor %}
+    </td>
+    <td>
+        {% for role in roles %} 
+            <p>{{ role.status }}</p>
+        {% endfor %}
+    </td>
+    <td>
+        {% for role in roles %} 
+            <p>Edit</p>
+        {% endfor %}
+    </td>
+    <tr>
+  </tbody>
+</table>
+
+
+{% endblock content %}
+

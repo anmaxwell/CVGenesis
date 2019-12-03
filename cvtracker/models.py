@@ -4,6 +4,7 @@ from cvtracker import db
 class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(60), nullable=False)
+    status = db.Column(db.String(30), nullable=False)
     role_notes = db.Column(db.String(360))
     date_opened = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     mrg_id = db.Column(db.Integer, db.ForeignKey('hirer.id'), nullable=False)
@@ -27,6 +28,7 @@ class CV(db.Model):
 class Hirer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), nullable=False)
+    status = db.Column(db.String(30), nullable=False)
     cv = db.relationship('CV', backref="manager", lazy=True)
     role = db.relationship('Role', backref="manager", lazy=True)
 

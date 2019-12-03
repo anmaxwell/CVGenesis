@@ -7,7 +7,7 @@ from flask import render_template, request, redirect, url_for, flash
 @app.route('/')
 @app.route('/home')
 def index():
-    return render_template('login.html')
+    return render_template('home.html')
 
 @app.route('/login', methods=["GET","POST"])
 def login_page():
@@ -39,17 +39,22 @@ def cv_edit():
     
 @app.route('/mgrlist')
 def mgr_list():
-    posts = Hirer.query.order_by(Hirer.name)
-    return render_template('mgrlist.html', posts=posts)
+    mgrs = Hirer.query.order_by(Hirer.status)
+    return render_template('mgrlist.html', mgrs=mgrs)
 
 @app.route('/mgrentry', methods=['GET', 'POST'])
 def mgr_entry():
 
     form = MgrEntry()
     if form.validate_on_submit():
-        post = Hirer(name=form.name.data)
-        db.session.add(post)
+        mgr = Hirer(name=form.name.data, status='active')
+        db.session.add(mgr)
         db.session.commit()
         flash("Successfully Added", 'success')
         return redirect(url_for('mgr_entry'))
     return render_template('mgrentry.html', form=form)
+
+@app.route('/rolelist')
+def role_list():
+    roles = Role.query.order_by(Role.status)
+    return render_template('rolelist.html', roles=roles)
