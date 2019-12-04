@@ -11,7 +11,7 @@ app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///site.db'
 db = SQLAlchemy(app)
 
 #to prevent getting stuck in circular imports create this last
-from cvtracker import routes
+from cvtracker import routes, models
 
 
 

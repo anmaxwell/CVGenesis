@@ -7,7 +7,7 @@ class Role(db.Model):
     status = db.Column(db.String(30), nullable=False)
     role_notes = db.Column(db.String(360))
     date_opened = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    mrg_id = db.Column(db.Integer, db.ForeignKey('hirer.id'), nullable=False)
+    mgr_id = db.Column(db.Integer, db.ForeignKey('hirer.id'), nullable=False)
     cvs = db.relationship('CV', backref="role", lazy=True)
 
     def __repr__(self):
@@ -20,7 +20,7 @@ class CV(db.Model):
     cv_notes = db.Column(db.String(360))
     date_entered = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=False)
-    mrg_id = db.Column(db.Integer, db.ForeignKey('hirer.id'), nullable=False)
+    mgr_id = db.Column(db.Integer, db.ForeignKey('hirer.id'), nullable=False)
 
     def __repr__(self):
         return f"CV('{self.surname}', '{self.date_entered})"
@@ -29,8 +29,8 @@ class Hirer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), nullable=False)
     status = db.Column(db.String(30), nullable=False)
-    cv = db.relationship('CV', backref="manager", lazy=True)
-    role = db.relationship('Role', backref="manager", lazy=True)
+    cv = db.relationship('CV', backref="mgrcv", lazy=True)
+    role = db.relationship('Role', backref="mgrrole", lazy=True)
 
     def __repr__(self):
-        return f"Hirer('{self.name}')"
+        return f"Hirer(#{self.id}, '{self.name}')"
