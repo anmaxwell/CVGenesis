@@ -1,6 +1,6 @@
 from cvtracker import app, db
 from cvtracker.models import CV, Hirer, Role
-from cvtracker.forms import MgrEntry, RoleEntry
+from cvtracker.forms import MgrEntry, RoleEntry, CVEntry
 from users import get_users
 from flask import render_template, request, redirect, url_for, flash
 
@@ -36,11 +36,13 @@ def cv_list():
 
 @app.route('/cventry')
 def cv_entry():
-   return render_template('cventry.html')
+
+    form = CVEntry()
+    return render_template('cventry.html', form=form)
 
 @app.route('/cvedit')
 def cv_edit():
-   return render_template('cvedit.html')
+    return render_template('cvedit.html')
     
 @app.route('/mgrlist')
 def mgr_list():

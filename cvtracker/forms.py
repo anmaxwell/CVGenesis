@@ -21,5 +21,4 @@ class CVEntry(FlaskForm):
     cvnotes = TextAreaField('Notes')
     date_entered = DateField('Date Entered', format='%Y-%m-%d')
     role = SelectField(u'Role', choices=[], coerce=int)
-    manager = SelectField(u'Hiring Manager', choices=[], coerce=int)
     submit = SubmitField('Submit')
