@@ -29,6 +29,11 @@ def login_page():
     except Exception:
         return render_template("errorlogin.html", error = error)  
 
+@app.route('/cvlist')
+def cv_list():
+    cvs = CV.query.order_by(CV.reference)
+    return render_template('cvlist.html', cvs=cvs)
+
 @app.route('/cventry')
 def cv_entry():
    return render_template('cventry.html')
@@ -66,10 +71,10 @@ def role_entry():
     form.manager.choices = [(hirer.id, hirer.name) for hirer in Hirer.query.all()]
     if form.validate_on_submit():
         mgrname = form.manager.data
-        #mgrid = Hirer.query.filter_by(name=mgrname).first().id
-        mgrid = 3
+        mgrid = Hirer.query.filter_by(name=mgrname).first()
+        #mgrid = 3
         role = Role(title=form.title.data, status='active', role_notes=form.notes.data, date_opened=form.date_opened.data,
-                        mgr_id=mgrid)
+                        mgr_id=mgrname)
         db.session.add(role)
         db.session.commit()
         flash("Successfully Added", 'success')

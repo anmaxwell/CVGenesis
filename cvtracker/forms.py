@@ -11,7 +11,15 @@ class MgrEntry(FlaskForm):
 
 class RoleEntry(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
-    notes = TextAreaField('Notes', validators=[DataRequired()])
+    notes = TextAreaField('Notes')
     date_opened = DateField('Date Opened', format='%Y-%m-%d')
+    manager = SelectField(u'Hiring Manager', choices=[], coerce=int)
+    submit = SubmitField('Submit')
+
+class CVEntry(FlaskForm):
+    reference = StringField('Reference', validators=[DataRequired()])
+    cvnotes = TextAreaField('Notes')
+    date_entered = DateField('Date Entered', format='%Y-%m-%d')
+    role = SelectField(u'Role', choices=[], coerce=int)
     manager = SelectField(u'Hiring Manager', choices=[], coerce=int)
     submit = SubmitField('Submit')

@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+
+{% block header %}
+  <nav class="navbar navbar-light bg-light">
+    <span class="navbar-brand text-primary h1">CVs</span>
+    <form class="form-inline">
+      <a href="{{ url_for('cv_entry') }}" class="btn btn-outline-primary" role="add" >Add +</a>
+    </form>
+  </nav>
+{% endblock header %}
+
+{% block content %}
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Reference</th>
+      <th scope="col">Role</th>
+      <th scope="col">Hiring Manager</th>
+      <th scope="col">Status</th>
+      <th scope="col">Date Entered</th>
+      <th scope="col">Edit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <td>
+        {% for cv in cvs %}     
+            <p>{{ cv.reference }}</p>
+        {% endfor %}
+    </td>
+    <td>
+        {% for cv in cvs %}     
+            <p>{{ cv.role.title }}</p>
+        {% endfor %}
+    </td>
+    <td>
+        {% for cv in cvs %} 
+            <p>{{ cv.mgrcv.name }}</p>
+        {% endfor %}
+      </td>
+    <td>
+        {% for cv in cvs %} 
+            <p>{{ cv.status }}</p>
+        {% endfor %}
+    </td>
+    <td>
+        {% for cv in cvs %} 
+            <p>{{ cv.date_entered }}</p>
+        {% endfor %}
+    </td>
+    <td>
+        {% for cv in cvs %} 
+            <p>Edit</p>
+        {% endfor %}
+    </td>
+    <tr>
+  </tbody>
+</table>
+
+
+{% endblock content %}
+
