@@ -13,6 +13,5 @@ class RoleEntry(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     notes = TextAreaField('Notes', validators=[DataRequired()])
     date_opened = DateField('Date Opened', format='%Y-%m-%d')
-    #manager = SelectField(u'Hiring Manager', choices=[(g.id, g.name) for g in Hirer.query.all()])
-    manager = StringField('Manager', validators=[DataRequired()])
+    manager = SelectField(u'Hiring Manager', choices=[], coerce=int)
     submit = SubmitField('Submit')

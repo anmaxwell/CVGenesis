@@ -63,11 +63,13 @@ def role_list():
 def role_entry():
 
     form = RoleEntry()
+    form.manager.choices = [(hirer.id, hirer.name) for hirer in Hirer.query.all()]
     if form.validate_on_submit():
         mgrname = form.manager.data
-        mgrid = Hirer.query.filter_by(name=mgrname).first().id
+        #mgrid = Hirer.query.filter_by(name=mgrname).first().id
+        mgrid = 3
         role = Role(title=form.title.data, status='active', role_notes=form.notes.data, date_opened=form.date_opened.data,
-                        manager=int(1), cvs='0')
+                        mgr_id=mgrid)
         db.session.add(role)
         db.session.commit()
         flash("Successfully Added", 'success')
