@@ -6,7 +6,7 @@ class Role(db.Model):
     title = db.Column(db.String(60), nullable=False)
     status = db.Column(db.String(30), nullable=False)
     role_notes = db.Column(db.String(360))
-    date_opened = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_opened = db.Column(db.Date, nullable=False, default=datetime.utcnow)
     mgr_id = db.Column(db.Integer, db.ForeignKey('hirer.id'), nullable=False)
     cvs = db.relationship('CV', backref="role", lazy=True)
 
