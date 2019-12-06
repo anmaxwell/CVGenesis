@@ -18,6 +18,7 @@ class CV(db.Model):
     reference = db.Column(db.String(60), nullable=False)
     status = db.Column(db.String(30), nullable=False)
     cv_notes = db.Column(db.String(360))
+    source = db.Column(db.String(360))
     date_entered = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=False)
     mgr_id = db.Column(db.Integer, db.ForeignKey('hirer.id'), nullable=False)
