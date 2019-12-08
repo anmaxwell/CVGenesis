@@ -9,36 +9,27 @@ from flask import render_template, request, redirect, url_for, flash
 def index():
     return render_template('home.html')
 
-@app.route('/login', methods=["GET","POST"])
-def login_page():
-
-    error = ''
-    valid_user = get_users()
-
-    try:
-         if request.method == "POST":
-            attempted_username = request.form['username']
-
-            if attempted_username in valid_user:
-                return redirect(url_for('menu'))				
-            else:
-                error = "Invalid credentials. Try Again."
-
-         return render_template("errorlogin.html", error = error)
-
-    except Exception:
-        return render_template("errorlogin.html", error = error)  
-
 @app.route('/cvlist')
 def cv_list():
     cvs = CV.query.order_by(CV.reference)
     return render_template('cvlist.html', cvs=cvs)
 
-@app.route('/cventry')
+@app.route('/cventry', methods=['GET', 'POST'])
 def cv_entry():
 
     form = CVEntry()
+    form.role.choices = [(role.id, role.title) for role in Role.query.all()]
+    if form.validate_on_submit():
+        roletitle = form.role.data
+        roleid = Role.query.filter_by(title=roletitle).first()
+        cv = CV(reference=form.reference.data, status='active', cv_notes=form.cvnotes.data, date_entered=form.date_entered.data,
+                        role_id=roletitle)
+        db.session.add(cv)
+        db.session.commit()
+        flash("Successfully Added", 'success')
+        return redirect(url_for('cv_entry'))
     return render_template('cventry.html', form=form)
+
 
 @app.route('/cvedit')
 def cv_edit():
@@ -74,7 +65,6 @@ def role_entry():
     if form.validate_on_submit():
         mgrname = form.manager.data
         mgrid = Hirer.query.filter_by(name=mgrname).first()
-        #mgrid = 3
         role = Role(title=form.title.data, status='active', role_notes=form.notes.data, date_opened=form.date_opened.data,
                         mgr_id=mgrname)
         db.session.add(role)
