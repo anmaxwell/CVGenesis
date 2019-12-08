@@ -12,7 +12,7 @@
 
 {% block content %}
 
-<table class="table">
+<table class="table" id="cvlist">
   <thead>
     <tr>
       <th scope="col">Reference</th>
@@ -24,41 +24,31 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-    <td>
-        {% for cv in cvs %}     
-            <p>{{ cv.reference }}</p>
-        {% endfor %}
-    </td>
-    <td>
-        {% for cv in cvs %}     
-            <p>{{ cv.role.title }}</p>
-        {% endfor %}
-    </td>
-    <td>
-        {% for cv in cvs %} 
-            <p>{{ cv.role.mgrrole.name }}</p>
-        {% endfor %}
-      </td>
-    <td>
-        {% for cv in cvs %} 
-            <p>{{ cv.status }}</p>
-        {% endfor %}
-    </td>
-    <td>
-        {% for cv in cvs %} 
-            <p>{{ cv.date_entered }}</p>
-        {% endfor %}
-    </td>
-    <td>
-        {% for cv in cvs %} 
-            <p>Edit</p>
-        {% endfor %}
-    </td>
-    <tr>
+
+      {% for cv in cvs %}
+        <tr>
+          <!-- Loop each CV field -->
+          <td> {{ cv.reference }} </td>
+          <td> {{ cv.role.title }} </td>
+          <td> {{ cv.role.mgrrole.name }} </td>
+          <td> {{ cv.status }} </td>
+          <td> {{ cv.date_entered }} </td>
+          <td> <p>Edit</p> </td>
+        </tr>     
+      {% endfor %}
+
   </tbody>
 </table>
 
-
 {% endblock content %}
 
+{% block footer %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+  console.log("Hello")
+  $('#cvlist').DataTable();
+} );
+</script>
+
+{% endblock footer %}
