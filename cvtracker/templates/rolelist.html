@@ -22,13 +22,13 @@
       <th scope="col">Edit</th>
     </tr>
   </thead>
-  
+
   <tbody>
     {% for role in roles %}
       <tr>
         <td> {{ role.title }} </td>
         <td> {{ role.mgrrole.name }} </td>
-        <td> {{ role.date_opened }} </td>
+        <td> {{ role.date_opened.strftime('%Y-%m-%d') }} </td>
         <td> {{ role.status }} </td>
         <td> <p>Edit</p> </td>
       </tr>

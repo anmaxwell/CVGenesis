@@ -32,7 +32,7 @@
         <td> {{ cv.role.title }} </td>
         <td> {{ cv.role.mgrrole.name }} </td>
         <td> {{ cv.status }} </td>
-        <td> {{ cv.date_entered }} </td>
+        <td> {{ cv.date_entered.strftime('%Y-%m-%d') }} </td>
         <td> <p>Edit</p> </td>
       </tr>     
     {% endfor %}
