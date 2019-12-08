@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+
+{% block header %}
+  <nav class="navbar navbar-light bg-light">
+    <span class="navbar-brand text-primary h1">Role status</span>
+    <form class="form-inline">
+      <a href="{{ url_for('role_entry') }}" class="btn btn-outline-primary" role="add" >Add +</a>
+    </form>
+  </nav>
+{% endblock header %}
+
+{% block content %}
+
+<table class="table" id="rolelist">
+  <thead>
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Manager</th>
+      <th scope="col">Date</th>
+      <th scope="col">Status</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for role in roles %}
+      <tr>
+        <td> {{ role.title }} </td>
+        <td> {{ role.mgrrole.name }} </td>
+        <td> {{ role.date_opened.strftime('%Y-%m-%d') }} </td>
+        <td> {{ role.status }} </td>
+        <td> <a href="{{ url_for('role_edit', role_id=role.id) }}" class="btn btn-light" role="edit" >Edit</a> </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>>
+
+{% endblock content %}
+
+{% block footer %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#rolelist').DataTable();
+} );
+</script>
+
+{% endblock footer %}

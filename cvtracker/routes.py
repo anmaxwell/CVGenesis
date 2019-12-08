@@ -118,3 +118,18 @@ def role_edit(role_id):
         form.manager.data = roleedit.mgr_id
 
     return render_template('roleentry.html',form=form, legend='Update role')
+
+@app.route('/addsource')
+def add_source():
+    roles = Role.query.order_by(Role.status)
+    return render_template('rolelist.html')
+
+@app.route('/cvstatus')
+def cv_status():
+    cvs = CV.query.order_by(CV.reference)
+    return render_template('cvstatus.html', cvs=cvs)
+
+@app.route('/rolestatus')
+def role_status():
+    roles = Role.query.order_by(Role.status)
+    return render_template('rolestatus.html', roles=roles)

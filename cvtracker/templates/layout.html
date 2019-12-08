@@ -21,18 +21,33 @@
     </head>
     <body>
         <div class="container">
-            <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary navbar-dark bg-primary">
                 <a class="navbar-brand mb-0 h1" href="{{ url_for('index') }}">CVTracker</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
-                    <a class="nav-item nav-link" href="{{ url_for('role_list') }}">Roles </a>
-                    <a class="nav-item nav-link" href="{{ url_for('cv_list') }}">CVs</a>
-                    <a class="nav-item nav-link" href="{{ url_for('mgr_list') }}">Hiring Managers</a>
+                        <a class="nav-item nav-link" href="{{ url_for('role_list') }}">Roles </a>
+                        <a class="nav-item nav-link" href="{{ url_for('cv_list') }}">CVs</a>
+                        <a class="nav-item nav-link" href="{{ url_for('mgr_list') }}">Hiring Managers</a>
                     </div>
                 </div>
+
+
+                <div class="navbar-nav dropdown">
+                    <a class="nav-item nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown">
+                        Settings
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{ url_for('role_list') }}">Add source</a>
+                        <a class="dropdown-item" href="{{ url_for('role_status') }}">Add role status</a>
+                        <a class="dropdown-item" href="{{ url_for('cv_status') }}">Add cv status</a>
+                    </div>
+                </div>
+
+
+
             </nav>
 
             <div id="header">
