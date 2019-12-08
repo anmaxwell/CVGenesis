@@ -27,7 +27,7 @@ def cv_entry():
         db.session.commit()
         flash("Successfully Added", 'success')
         return redirect(url_for('cv_entry'))
-    return render_template('cventry.html', form=form)
+    return render_template('cventry.html', form=form, legend='Add new CV')
 
 
 @app.route("/cvedit/<int:cv_id>/update", methods=['GET', 'POST'])
@@ -42,9 +42,10 @@ def cv_edit(cv_id):
         cvedit.reference = form.reference.data
         cvedit.status = 'active'
         cvedit.cv_notes = form.cvnotes.data
+        cvedit.date_entered = form.date_entered.data
         cvedit.role_id = roletitle
         db.session.commit()
-        flash("Successfully Update", 'success')
+        flash("Successfully Updated", 'success')
         return redirect(url_for('cv_list'))
 
     elif request.method == 'GET':
@@ -53,7 +54,7 @@ def cv_edit(cv_id):
         form.date_entered.data = cvedit.date_entered
         form.role.data = cvedit.role_id
 
-    return render_template('cventry.html',form=form)
+    return render_template('cventry.html',form=form, legend='Update CV')
     
 @app.route('/mgrlist')
 def mgr_list():
@@ -84,11 +85,36 @@ def role_entry():
     form.manager.choices = [(hirer.id, hirer.name) for hirer in Hirer.query.all()]
     if form.validate_on_submit():
         mgrname = form.manager.data
-        mgrid = Hirer.query.filter_by(name=mgrname).first()
         role = Role(title=form.title.data, status='active', role_notes=form.notes.data, date_opened=form.date_opened.data,
                         mgr_id=mgrname)
         db.session.add(role)
         db.session.commit()
         flash("Successfully Added", 'success')
         return redirect(url_for('role_entry'))
-    return render_template('roleentry.html', form=form)
+    return render_template('roleentry.html', form=form, legend='Add new role')
+
+@app.route("/roleedit/<int:role_id>/update", methods=['GET', 'POST'])
+def role_edit(role_id):
+
+    roleedit=Role.query.get(role_id)
+
+    form = RoleEntry()
+    form.manager.choices = [(hirer.id, hirer.name) for hirer in Hirer.query.all()]
+    if form.validate_on_submit():
+        mgrname = form.manager.data
+        roleedit.title = form.title.data
+        roleedit.status = 'active'
+        roleedit.role_notes = form.notes.data
+        roleedit.date_opened = form.date_opened.data
+        roleedit.mgr_id = mgrname
+        db.session.commit()
+        flash("Successfully Updated", 'success')
+        return redirect(url_for('role_list'))
+
+    elif request.method == 'GET':
+        form.title.data = roleedit.title
+        form.notes.data = roleedit.role_notes
+        form.date_opened.data = roleedit.date_opened
+        form.manager.data = roleedit.mgr_id
+
+    return render_template('roleentry.html',form=form, legend='Update role')
