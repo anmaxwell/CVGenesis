@@ -12,31 +12,32 @@
 
 {% block content %}
 
-<table class="table">
+<table class="table" id="mgrlist">
   <thead>
     <tr>
       <th scope="col">Name</th>
       <th scope="col">Status</th>
     </tr>
   </thead>
+  
   <tbody>
-    <tr>
-    <td>
-      {% for mgr in mgrs %}
-      
-          <p>{{ mgr.name }}</p>
-      
-      {% endfor %}
-    </td>
-    <td>
-        {% for mgr in mgrs %}
-        
-            <p>{{ mgr.status }}</p>
-        
-        {% endfor %}
-      </td>
-    <tr>
+    {% for mgr in mgrs %}
+      <tr>
+          <td> {{ mgr.name }} </td>
+          <td> {{ mgr.status }} </td>
+      </tr>
+    {% endfor %}
   </tbody>
 </table>
 
 {% endblock content %}
+
+{% block footer %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#mgrlist').DataTable();
+} );
+</script>
+
+{% endblock footer %}

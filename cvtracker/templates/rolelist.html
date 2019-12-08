@@ -12,7 +12,7 @@
 
 {% block content %}
 
-<table class="table">
+<table class="table" id="rolelist">
   <thead>
     <tr>
       <th scope="col">Title</th>
@@ -22,37 +22,28 @@
       <th scope="col">Edit</th>
     </tr>
   </thead>
+  
   <tbody>
-    <tr>
-    <td>
-        {% for role in roles %}     
-            <p>{{ role.title }}</p>
-        {% endfor %}
-    </td>
-    <td>
-        {% for role in roles %} 
-            <p>{{ role.mgrrole.name }}</p>
-        {% endfor %}
-      </td>
-    <td>
-        {% for role in roles %} 
-            <p>{{ role.date_opened }}</p>
-        {% endfor %}
-    </td>
-    <td>
-        {% for role in roles %} 
-            <p>{{ role.status }}</p>
-        {% endfor %}
-    </td>
-    <td>
-        {% for role in roles %} 
-            <p>Edit</p>
-        {% endfor %}
-    </td>
-    <tr>
+    {% for role in roles %}
+      <tr>
+        <td> {{ role.title }} </td>
+        <td> {{ role.mgrrole.name }} </td>
+        <td> {{ role.date_opened }} </td>
+        <td> {{ role.status }} </td>
+        <td> <p>Edit</p> </td>
+      </tr>
+    {% endfor %}
   </tbody>
 </table>
 
-
 {% endblock content %}
 
+{% block footer %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#rolelist').DataTable();
+} );
+</script>
+
+{% endblock footer %}
