@@ -21,7 +21,6 @@ def cv_entry():
     form.role.choices = [(role.id, role.title) for role in Role.query.all()]
     if form.validate_on_submit():
         roletitle = form.role.data
-        roleid = Role.query.filter_by(title=roletitle).first()
         cv = CV(reference=form.reference.data, status='active', cv_notes=form.cvnotes.data, date_entered=form.date_entered.data,
                         role_id=roletitle)
         db.session.add(cv)
@@ -31,9 +30,30 @@ def cv_entry():
     return render_template('cventry.html', form=form)
 
 
-@app.route('/cvedit')
-def cv_edit():
-    return render_template('cvedit.html')
+@app.route("/cvedit/<int:cv_id>/update", methods=['GET', 'POST'])
+def cv_edit(cv_id):
+
+    cvedit=CV.query.get(cv_id)
+
+    form = CVEntry()
+    form.role.choices = [(role.id, role.title) for role in Role.query.all()]
+    if form.validate_on_submit():
+        roletitle = form.role.data
+        cvedit.reference = form.reference.data
+        cvedit.status = 'active'
+        cvedit.cv_notes = form.cvnotes.data
+        cvedit.role_id = roletitle
+        db.session.commit()
+        flash("Successfully Update", 'success')
+        return redirect(url_for('cv_list'))
+
+    elif request.method == 'GET':
+        form.reference.data = cvedit.reference
+        form.cvnotes.data = cvedit.cv_notes
+        form.date_entered.data = cvedit.date_entered
+        form.role.data = cvedit.role_id
+
+    return render_template('cventry.html',form=form)
     
 @app.route('/mgrlist')
 def mgr_list():
