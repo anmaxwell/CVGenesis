@@ -1,6 +1,6 @@
 from cvtracker import app, db
-from cvtracker.models import CV, Hirer, Role
-from cvtracker.forms import MgrEntry, RoleEntry, CVEntry
+from cvtracker.models import CV, Hirer, Role, Source
+from cvtracker.forms import MgrEntry, RoleEntry, CVEntry, SourceEntry
 from users import get_users
 from flask import render_template, request, redirect, url_for, flash
 
@@ -18,11 +18,12 @@ def cv_list():
 def cv_entry():
 
     form = CVEntry()
-    form.role.choices = [(role.id, role.title) for role in Role.query.all()]
+    form.role.choices = [(role.id, role.title) for role in Role.query.order_by(Role.title).all()]
+    form.source.choices = [(source.id, source.name) for source in Source.query.order_by(Source.name).all()]
     if form.validate_on_submit():
         roletitle = form.role.data
         cv = CV(reference=form.reference.data, status='active', cv_notes=form.cvnotes.data, date_entered=form.date_entered.data,
-                        role_id=roletitle)
+                        role_id=roletitle, source_id=form.source.data)
         db.session.add(cv)
         db.session.commit()
         flash("Successfully Added", 'success')
@@ -82,7 +83,7 @@ def role_list():
 def role_entry():
 
     form = RoleEntry()
-    form.manager.choices = [(hirer.id, hirer.name) for hirer in Hirer.query.all()]
+    form.manager.choices = [(hirer.id, hirer.name) for hirer in Hirer.query.order_by(Hirer.name).all()]
     if form.validate_on_submit():
         mgrname = form.manager.data
         role = Role(title=form.title.data, status='active', role_notes=form.notes.data, date_opened=form.date_opened.data,
@@ -119,10 +120,18 @@ def role_edit(role_id):
 
     return render_template('roleentry.html',form=form, legend='Update role')
 
-@app.route('/addsource')
+@app.route('/addsource', methods=['GET', 'POST'])
 def add_source():
-    roles = Role.query.order_by(Role.status)
-    return render_template('rolelist.html')
+
+    sources = Source.query.order_by(Source.name)
+    form = SourceEntry()
+    if form.validate_on_submit():
+        sourcename = Source(name=form.name.data)
+        db.session.add(sourcename)
+        db.session.commit()
+        flash("Successfully Added", 'success')
+        return redirect(url_for('add_source'))
+    return render_template('sourceentry.html', form=form, sources=sources)
 
 @app.route('/cvstatus')
 def cv_status():

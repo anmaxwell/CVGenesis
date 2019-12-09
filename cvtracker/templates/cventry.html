@@ -61,6 +61,18 @@
                 {% else %}
                     {{ form.role(class="form-control form-control-lg") }}
                 {% endif %}
+
+                {{ form.source.label(class="form-control-label mt-1") }}
+                {% if form.source.errors %}
+                    {{ form.source(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.source.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.source(class="form-control form-control-lg") }}
+                {% endif %}
                 
             </div>
         </fieldset>

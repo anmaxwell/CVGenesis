@@ -3,16 +3,32 @@
 
 {% block header %}
   <nav class="navbar navbar-light bg-light">
-    <span class="navbar-brand text-primary h1">Add new manager</span>
+    <span class="navbar-brand text-primary h1">Add source</span>
   </nav>
 {% endblock header %}
 
 {% block content %}
 
+    <table class="table table-striped" id="sourcelist">
+    <thead>
+      <tr>
+        <th scope="col">Sources</th>
+      </tr>
+    </thead>
+    
+    <tbody>
+        {% for source in sources %}
+            <tr>
+                <td> {{ source.name }} </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
     <form method="POST" action="">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
-            <legend class="border-bottom mb-4">{{ legend }}</legend>
+
                 {{ form.name.label(class="form-control-label") }}
                 {% if form.name.errors %}
                     {{ form.name(class="form-control form-control-lg is-invalid") }}
@@ -31,3 +47,13 @@
     </form>
 
 {% endblock content %}
+
+{% block footer %}
+
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#sourcelist').DataTable();
+} );
+</script>
+
+{% endblock footer %}

@@ -20,6 +20,7 @@ class CV(db.Model):
     cv_notes = db.Column(db.String(360))
     date_entered = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=False)
+    source_id = db.Column(db.Integer, db.ForeignKey('source.id'), nullable=False)
 
     def __repr__(self):
         return f"CV('{self.reference}', '{self.date_entered})"
@@ -32,3 +33,11 @@ class Hirer(db.Model):
 
     def __repr__(self):
         return f"Hirer(#{self.id}, '{self.name}')"
+
+class Source(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(60), nullable=False)
+    cv = db.relationship('CV', backref="cvsource", lazy=True)
+
+    def __repr__(self):
+        return f"Source(#{self.id}, '{self.name}')"
