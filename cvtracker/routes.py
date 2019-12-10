@@ -1,6 +1,6 @@
 from cvtracker import app, db
-from cvtracker.models import CV, Hirer, Role, Source
-from cvtracker.forms import MgrEntry, RoleEntry, CVEntry, SourceEntry
+from cvtracker.models import CV, Hirer, Role, Source, Cvstatus
+from cvtracker.forms import MgrEntry, RoleEntry, CVEntry, SourceEntry, CVStatus
 from users import get_users
 from flask import render_template, request, redirect, url_for, flash
 
@@ -20,10 +20,10 @@ def cv_entry():
     form = CVEntry()
     form.role.choices = [(role.id, role.title) for role in Role.query.order_by(Role.title).all()]
     form.source.choices = [(source.id, source.name) for source in Source.query.order_by(Source.name).all()]
+    form.cvstatus.choices = [(cvstatus.id, cvstatus.name) for cvstatus in Cvstatus.query.order_by(Cvstatus.name).all()]
     if form.validate_on_submit():
-        roletitle = form.role.data
-        cv = CV(reference=form.reference.data, status='active', cv_notes=form.cvnotes.data, date_entered=form.date_entered.data,
-                        role_id=roletitle, source_id=form.source.data)
+        cv = CV(reference=form.reference.data, cvstatus_id=form.cvstatus.data, cv_notes=form.cvnotes.data, date_entered=form.date_entered.data,
+                        role_id=form.role.data, source_id=form.source.data)
         db.session.add(cv)
         db.session.commit()
         flash("Successfully Added", 'success')
@@ -38,13 +38,15 @@ def cv_edit(cv_id):
 
     form = CVEntry()
     form.role.choices = [(role.id, role.title) for role in Role.query.all()]
+    form.source.choices = [(source.id, source.name) for source in Source.query.order_by(Source.name).all()]
+    form.cvstatus.choices = [(cvstatus.id, cvstatus.name) for cvstatus in Cvstatus.query.order_by(Cvstatus.name).all()]
     if form.validate_on_submit():
-        roletitle = form.role.data
         cvedit.reference = form.reference.data
-        cvedit.status = 'active'
         cvedit.cv_notes = form.cvnotes.data
+        cvedit.cvstatus_id = form.cvstatus.data
         cvedit.date_entered = form.date_entered.data
-        cvedit.role_id = roletitle
+        cvedit.role_id = form.role.data
+        cvedit.source_id = form.source.data
         db.session.commit()
         flash("Successfully Updated", 'success')
         return redirect(url_for('cv_list'))
@@ -54,6 +56,9 @@ def cv_edit(cv_id):
         form.cvnotes.data = cvedit.cv_notes
         form.date_entered.data = cvedit.date_entered
         form.role.data = cvedit.role_id
+        form.source.data = cvedit.source_id
+        form.role.data = cvedit.role_id
+        form.cvstatus.data = cvedit.cvstatus_id
 
     return render_template('cventry.html',form=form, legend='Update CV')
     
@@ -133,10 +138,18 @@ def add_source():
         return redirect(url_for('add_source'))
     return render_template('sourceentry.html', form=form, sources=sources)
 
-@app.route('/cvstatus')
+@app.route('/cvstatus', methods=['GET', 'POST'])
 def cv_status():
-    cvs = CV.query.order_by(CV.reference)
-    return render_template('cvstatus.html', cvs=cvs)
+
+    statuses = Cvstatus.query.order_by(Cvstatus.name)
+    form = CVStatus()
+    if form.validate_on_submit():
+        statusname = Cvstatus(name=form.name.data)
+        db.session.add(statusname)
+        db.session.commit()
+        flash("Successfully Added", 'success')
+        return redirect(url_for('cv_status'))
+    return render_template('cvstatus.html', form=form, statuses=statuses)
 
 @app.route('/rolestatus')
 def role_status():

@@ -3,34 +3,48 @@
 
 {% block header %}
   <nav class="navbar navbar-light bg-light">
-    <span class="navbar-brand text-primary h1">CV status</span>
-    <form class="form-inline">
-      <a href="{{ url_for('cv_entry') }}" class="btn btn-outline-primary" role="add" >Add +</a>
-    </form>
+    <span class="navbar-brand text-primary h1">Add status</span>
   </nav>
 {% endblock header %}
 
 {% block content %}
 
-<table class="table" id="cvlist">
-  <thead>
-    <tr>
-
-      <th scope="col">Status</th>
-
-    </tr>
-  </thead>
-
-  <tbody>
-    {% for cv in cvs %}
+    <table class="table table-striped" id="cvstatus">
+    <thead>
       <tr>
+        <th scope="col">Statuses</th>
+      </tr>
+    </thead>
+    
+    <tbody>
+        {% for status in statuses %}
+            <tr>
+                <td> {{ status.name }} </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
-        <td> {{ cv.status }} </td>
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
 
-      </tr>     
-    {% endfor %}
-  </tbody>
-</table>
+                {{ form.name.label(class="form-control-label") }}
+                {% if form.name.errors %}
+                    {{ form.name(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.name.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.name(class="form-control form-control-lg") }}
+                {% endif %}
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-primary") }}
+        </div>
+    </form>
 
 {% endblock content %}
 
@@ -38,7 +52,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-  $('#cvlist').DataTable();
+  $('#cvstatus').DataTable();
 } );
 </script>
 
