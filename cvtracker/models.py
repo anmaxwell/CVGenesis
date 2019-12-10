@@ -4,10 +4,10 @@ from cvtracker import db
 class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(60), nullable=False)
-    status = db.Column(db.String(30), nullable=False)
     role_notes = db.Column(db.String(360))
     date_opened = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     mgr_id = db.Column(db.Integer, db.ForeignKey('hirer.id'), nullable=False)
+    rolestatus_id = db.Column(db.Integer, db.ForeignKey('rolestatus.id'), nullable=False)
     cvs = db.relationship('CV', backref="role", lazy=True)
 
     def __repr__(self):
@@ -49,3 +49,11 @@ class Cvstatus(db.Model):
 
     def __repr__(self):
         return f"CVStatus(#{self.id}, '{self.name}')"
+
+class Rolestatus(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(60), nullable=False)
+    rolestatus = db.relationship('Role', backref="rolestatus", lazy=True)
+
+    def __repr__(self):
+        return f"RoleStatus(#{self.id}, '{self.name}')"

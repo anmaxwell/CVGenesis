@@ -1,6 +1,6 @@
 from cvtracker import app, db
-from cvtracker.models import CV, Hirer, Role, Source, Cvstatus
-from cvtracker.forms import MgrEntry, RoleEntry, CVEntry, SourceEntry, CVStatus
+from cvtracker.models import CV, Hirer, Role, Source, Cvstatus, Rolestatus
+from cvtracker.forms import MgrEntry, RoleEntry, CVEntry, SourceEntry, CVStatus, RoleStatus
 from users import get_users
 from flask import render_template, request, redirect, url_for, flash
 
@@ -81,7 +81,7 @@ def mgr_entry():
 
 @app.route('/rolelist')
 def role_list():
-    roles = Role.query.order_by(Role.status)
+    roles = Role.query.order_by(Role.title)
     return render_template('rolelist.html', roles=roles)
 
 @app.route('/roleentry', methods=['GET', 'POST'])
@@ -89,10 +89,10 @@ def role_entry():
 
     form = RoleEntry()
     form.manager.choices = [(hirer.id, hirer.name) for hirer in Hirer.query.order_by(Hirer.name).all()]
+    form.rolestatus.choices = [(rolestatus.id, rolestatus.name) for rolestatus in Rolestatus.query.order_by(Rolestatus.name).all()]
     if form.validate_on_submit():
-        mgrname = form.manager.data
-        role = Role(title=form.title.data, status='active', role_notes=form.notes.data, date_opened=form.date_opened.data,
-                        mgr_id=mgrname)
+        role = Role(title=form.title.data, rolestatus_id=form.rolestatus.data, role_notes=form.notes.data, date_opened=form.date_opened.data,
+                        mgr_id=form.manager.data)
         db.session.add(role)
         db.session.commit()
         flash("Successfully Added", 'success')
@@ -106,10 +106,11 @@ def role_edit(role_id):
 
     form = RoleEntry()
     form.manager.choices = [(hirer.id, hirer.name) for hirer in Hirer.query.all()]
+    form.rolestatus.choices = [(rolestatus.id, rolestatus.name) for rolestatus in Rolestatus.query.order_by(Rolestatus.name).all()]
     if form.validate_on_submit():
         mgrname = form.manager.data
         roleedit.title = form.title.data
-        roleedit.status = 'active'
+        roleedit.rolestatus_id = form.rolestatus.data
         roleedit.role_notes = form.notes.data
         roleedit.date_opened = form.date_opened.data
         roleedit.mgr_id = mgrname
@@ -120,6 +121,7 @@ def role_edit(role_id):
     elif request.method == 'GET':
         form.title.data = roleedit.title
         form.notes.data = roleedit.role_notes
+        form.rolestatus.data = roleedit.rolestatus_id
         form.date_opened.data = roleedit.date_opened
         form.manager.data = roleedit.mgr_id
 
@@ -151,7 +153,15 @@ def cv_status():
         return redirect(url_for('cv_status'))
     return render_template('cvstatus.html', form=form, statuses=statuses)
 
-@app.route('/rolestatus')
+@app.route('/rolestatus', methods=['GET', 'POST'])
 def role_status():
-    roles = Role.query.order_by(Role.status)
-    return render_template('rolestatus.html', roles=roles)
+
+    statuses = Rolestatus.query.order_by(Rolestatus.name)
+    form = RoleStatus()
+    if form.validate_on_submit():
+        statusname = Rolestatus(name=form.name.data)
+        db.session.add(statusname)
+        db.session.commit()
+        flash("Successfully Added", 'success')
+        return redirect(url_for('role_status'))
+    return render_template('rolestatus.html', form=form, statuses=statuses)

@@ -39,6 +39,18 @@
                     {{ form.notes(class="form-control form-control-lg") }}
                 {% endif %}
 
+                {{ form.rolestatus.label(class="form-control-label mt-1") }}
+                {% if form.rolestatus.errors %}
+                    {{ form.rolestatus(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.rolestatus.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.rolestatus(class="form-control form-control-lg") }}
+                {% endif %}
+
                 {{ form.date_opened.label(class="form-control-label mt-1") }}
                 {% if form.date_opened.errors %}
                     {{ form.date_opened(class="form-control form-control-lg is-invalid") }}

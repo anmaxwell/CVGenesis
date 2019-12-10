@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, SelectField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired
-from cvtracker.models import CV, Hirer, Role, Source, Cvstatus
+from cvtracker.models import CV, Hirer, Role, Source, Cvstatus, Rolestatus
 
 
 class MgrEntry(FlaskForm):
@@ -14,6 +14,7 @@ class RoleEntry(FlaskForm):
     notes = TextAreaField('Notes')
     date_opened = DateField('Date Opened', format='%Y-%m-%d')
     manager = SelectField(u'Hiring Manager', choices=[], coerce=int)
+    rolestatus = SelectField(u'RoleStatus', choices=[], coerce=int)
     submit = SubmitField('Submit')
 
 class CVEntry(FlaskForm):
@@ -30,5 +31,9 @@ class SourceEntry(FlaskForm):
     submit = SubmitField('Submit')
 
 class CVStatus(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+class RoleStatus(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     submit = SubmitField('Submit')

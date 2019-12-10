@@ -3,38 +3,48 @@
 
 {% block header %}
   <nav class="navbar navbar-light bg-light">
-    <span class="navbar-brand text-primary h1">Role status</span>
-    <form class="form-inline">
-      <a href="{{ url_for('role_entry') }}" class="btn btn-outline-primary" role="add" >Add +</a>
-    </form>
+    <span class="navbar-brand text-primary h1">Add status</span>
   </nav>
 {% endblock header %}
 
 {% block content %}
 
-<table class="table" id="rolelist">
-  <thead>
-    <tr>
-      <th scope="col">Title</th>
-      <th scope="col">Manager</th>
-      <th scope="col">Date</th>
-      <th scope="col">Status</th>
-      <th scope="col"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    {% for role in roles %}
+    <table class="table table-striped" id="rolestatus">
+    <thead>
       <tr>
-        <td> {{ role.title }} </td>
-        <td> {{ role.mgrrole.name }} </td>
-        <td> {{ role.date_opened.strftime('%Y-%m-%d') }} </td>
-        <td> {{ role.status }} </td>
-        <td> <a href="{{ url_for('role_edit', role_id=role.id) }}" class="btn btn-light" role="edit" >Edit</a> </td>
+        <th scope="col">Statuses</th>
       </tr>
-    {% endfor %}
-  </tbody>
-</table>>
+    </thead>
+    
+    <tbody>
+        {% for status in statuses %}
+            <tr>
+                <td> {{ status.name }} </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+
+                {{ form.name.label(class="form-control-label") }}
+                {% if form.name.errors %}
+                    {{ form.name(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.name.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.name(class="form-control form-control-lg") }}
+                {% endif %}
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-primary") }}
+        </div>
+    </form>
 
 {% endblock content %}
 
@@ -42,7 +52,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-  $('#rolelist').DataTable();
+  $('#rolestatus').DataTable();
 } );
 </script>
 
