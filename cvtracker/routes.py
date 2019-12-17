@@ -2,16 +2,20 @@ from cvtracker import app, db
 from cvtracker.models import CV, Hirer, Role, Source, Cvstatus, Rolestatus
 from cvtracker.forms import MgrEntry, RoleEntry, CVEntry, SourceEntry, CVStatus, RoleStatus
 from users import get_users
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, json
 from sqlalchemy import func, distinct 
 
 @app.route('/')
 @app.route('/home')
 def index():
-    cvstatuscount = db.session.query(func.count(distinct(CV.cvstatus_id)))
-    newcount = db.session.query(CV.cvstatus_id, func.count(CV.cvstatus_id)).group_by(CV.cvstatus_id).all()
-    
-    return render_template('home.html', cvstatuscount=cvstatuscount, newcount=newcount)
+    cvcount = db.session.query(CV.cvstatus_id, func.count(CV.cvstatus_id)).group_by(CV.cvstatus_id).all()
+    chartdata = {'labels': [], 'data': []}
+    for item in cvcount:
+        chartdata['labels'].append(item[0])
+        chartdata['data'].append(item[1])
+
+    convcvcount = json.dumps(chartdata)
+    return render_template('home.html', convcvcount=convcvcount, cvcount=cvcount)
 
 @app.route('/cvlist')
 def cv_list():
