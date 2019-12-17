@@ -3,7 +3,15 @@
 
 {% block header %}
 Testing
+
 {{ newcount }}
+
+{% for counting in newcount %}
+
+{{ counting }}
+next
+
+{% endfor %}
 
 {% endblock header %}
 
