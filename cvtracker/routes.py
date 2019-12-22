@@ -8,14 +8,20 @@ from sqlalchemy import func, distinct
 @app.route('/')
 @app.route('/home')
 def index():
-    cvcount = db.session.query(CV.cvstatus_id, func.count(CV.cvstatus_id)).group_by(CV.cvstatus_id).all()
-    chartdata = {'labels': [], 'data': []}
+    cvcount = db.session.query(CV.cvstatus_id, Cvstatus.name, func.count(CV.cvstatus_id)).group_by(CV.cvstatus_id).join(Cvstatus).all()
+    cvchartdata = {'labels': [], 'data': []}
     for item in cvcount:
-        chartdata['labels'].append(item[0])
-        chartdata['data'].append(item[1])
+        cvchartdata['labels'].append(item[1])
+        cvchartdata['data'].append(item[2])
+    convcvcount = json.dumps(cvchartdata)
 
-    convcvcount = json.dumps(chartdata)
-    return render_template('home.html', convcvcount=convcvcount, cvcount=cvcount)
+    rolecount = db.session.query(Role.rolestatus_id, Rolestatus.name, func.count(Role.rolestatus_id)).group_by(Role.rolestatus_id).join(Rolestatus).all()
+    rolechartdata = {'labels': [], 'data': []}
+    for item in rolecount:
+        rolechartdata['labels'].append(item[1])
+        rolechartdata['data'].append(item[2])
+    convrolecount = json.dumps(rolechartdata)
+    return render_template('home.html', convcvcount=convcvcount, convrolecount=convrolecount)
 
 @app.route('/cvlist')
 def cv_list():

@@ -1,79 +1,61 @@
   
 {% extends "layout.html" %}
 
-{% block header %}
-Testing
-
-{{ cvcount }}
-{{ convcvcount }}
-
-
-{% endblock header %}
-
 {% block content %}
 
-<canvas id="pie-chart" width="800" height="450"></canvas>
-<script>
-    var data = {{ convcvcount|safe }}
-    var myChart = new Chart(document.getElementById("pie-chart"), {
-    type: 'pie',
-    data: {
-      labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
-      datasets: [{
-        label: "Population (millions)",
-        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-        data: [2478,5267,734,784,433]
-      }]
-    },
-    options: {
-      title: {
-        display: true,
-        text: 'Predicted world population (millions) in 2050'
-      }
-    }
-});
-</script>
+<div class="container">
+    <div class="row">
 
-<canvas id="myChart" width="100" height="100"></canvas>
-<script>
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        <div class="col-6">
+        <canvas id="cv-pie-chart" height="250"></canvas>
+        </div>
+        <script>
+            var data = {{ convcvcount|safe }}  
+            var myChart = new Chart(document.getElementById("cv-pie-chart"), {
+            type: 'pie',
+            data: {
+            labels: data.labels,
             datasets: [{
-                label: '# of Votes',
-                data: [1, 4, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
+                label: "CVs by status",
+                backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+                data: data.data
             }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                }
+            },
+            options: {
+            title: {
+                display: true,
+                text: 'CVs by status'
+            }
+            }
+        });
+        </script>
+
+        <div class="col-6">
+        <canvas id="role-pie-chart" height="250"></canvas>
+        </div>
+        <script>
+            var data = {{ convrolecount|safe }}  
+            var myChart = new Chart(document.getElementById("role-pie-chart"), {
+            type: 'pie',
+            data: {
+            labels: data.labels,
+            datasets: [{
+                label: "Roles by status",
+                backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+                data: data.data
             }]
-        }
-    }
-});
-</script>
+            },
+            options: {
+            title: {
+                display: true,
+                text: 'Roles by status'
+            }
+            }
+        });
+        </script>
+    </div>
+</div>
+
 
 
 {% endblock content %}
