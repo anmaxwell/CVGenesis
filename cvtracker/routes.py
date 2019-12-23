@@ -179,3 +179,22 @@ def role_status():
         flash("Successfully Added", 'success')
         return redirect(url_for('role_status'))
     return render_template('rolestatus.html', form=form, statuses=statuses)
+
+
+@app.route('/cvquery')
+def cvquery():
+
+    idval =  request.args.get('id')
+    cvquery = CV.query.order_by(CV.reference).filter_by(cvstatus_id=idval)
+
+    return render_template('cvquery.html', cvquery=cvquery)
+
+
+@app.route('/rolequery')
+def rolequery():
+
+    idval =  request.args.get('id')
+    rolequery = Role.query.order_by(Role.title).filter_by(rolestatus_id=idval)
+
+    return render_template('rolequery.html', rolequery=rolequery)
+

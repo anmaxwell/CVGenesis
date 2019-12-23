@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<table class="table table-striped" id="cvquery">
+  <thead>
+    <tr>
+      <th scope="col">Reference</th>
+      <th scope="col">Role</th>
+      <th scope="col">Hiring Manager</th>
+      <th scope="col">Status</th>
+      <th scope="col">Date Entered</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for cv in cvquery %}
+      <tr>
+        <!-- Loop each CV field -->
+        <td> {{ cv.reference }} </td>
+        <td> {{ cv.role.title }} </td>
+        <td> {{ cv.role.mgrrole.name }} </td>
+        <td> {{ cv.cvstatus.name }} </td>
+        <td> {{ cv.date_entered.strftime('%Y-%m-%d') }} </td>
+        <td> <a href="{{ url_for('cv_edit', cv_id=cv.id) }}" class="btn btn-light" role="edit" >Edit</a> </td>
+      </tr>     
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock content %}
