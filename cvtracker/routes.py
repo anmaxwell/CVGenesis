@@ -26,7 +26,11 @@ def index():
 
 @app.route('/cvlist')
 def cv_list():
-    cvs = CV.query.order_by(CV.reference)
+    if request.args:
+        args = request.args.get('role')
+        cvs = CV.query.order_by(CV.reference).filter_by(role_id=args)
+    else:
+        cvs = CV.query.order_by(CV.reference)
     return render_template('cvlist.html', cvs=cvs)
 
 @app.route('/cventry', methods=['GET', 'POST'])
