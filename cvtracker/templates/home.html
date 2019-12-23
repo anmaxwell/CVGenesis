@@ -14,12 +14,14 @@
             var myChart = new Chart(document.getElementById("cv-pie-chart"), {
             type: 'pie',
             data: {
-            labels: data.labels,
-            datasets: [{
-                label: "CVs by status",
-                backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-                data: data.data
-            }]
+                labels: data.labels,
+                datasets: [{
+                    label: "CVs by status",
+                    backgroundColor: palette('cb-Blues', data.labels.length).map(function(hex) {
+                        return '#' + hex;
+                    }),
+                    data: data.data
+                }]
             },
             options: {
             title: {
@@ -38,12 +40,14 @@
             var myChart = new Chart(document.getElementById("role-pie-chart"), {
             type: 'pie',
             data: {
-            labels: data.labels,
-            datasets: [{
-                label: "Roles by status",
-                backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-                data: data.data
-            }]
+                labels: data.labels,
+                datasets: [{
+                    label: "Roles by status",
+                    backgroundColor: palette('cb-Blues', data.labels.length).map(function(hex) {
+                        return '#' + hex;
+                    }),
+                    data: data.data
+                }]
             },
             options: {
             title: {

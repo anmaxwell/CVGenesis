@@ -4,6 +4,7 @@ from cvtracker.forms import MgrEntry, RoleEntry, CVEntry, SourceEntry, CVStatus,
 from users import get_users
 from flask import render_template, request, redirect, url_for, flash, json
 from sqlalchemy import func, distinct 
+import urllib.parse
 
 @app.route('/')
 @app.route('/home')
@@ -184,7 +185,8 @@ def role_status():
 @app.route('/cvquery')
 def cvquery():
 
-    idval =  request.args.get('id')
+    idname = urllib.parse.unquote(request.args.get('id'))
+    idval =  db.session.query(Cvstatus.id).filter_by(name=idname).all()
     cvquery = CV.query.order_by(CV.reference).filter_by(cvstatus_id=idval)
 
     return render_template('cvquery.html', cvquery=cvquery)
@@ -193,8 +195,9 @@ def cvquery():
 @app.route('/rolequery')
 def rolequery():
 
-    idval =  request.args.get('id')
-    rolequery = Role.query.order_by(Role.title).filter_by(rolestatus_id=idval)
+    idname = urllib.parse.unquote(request.args.get('id'))
+    idval = db.session.query(Rolestatus.id).filter_by(name=idname).all()
+    rolequery = Role.query.order_by(Role.title).filter_by(rolestatus_id=idval[0][0])
 
     return render_template('rolequery.html', rolequery=rolequery)
 
