@@ -187,9 +187,9 @@ def cvquery():
 
     idname = urllib.parse.unquote(request.args.get('id'))
     idval =  db.session.query(Cvstatus.id).filter_by(name=idname).all()
-    cvquery = CV.query.order_by(CV.reference).filter_by(cvstatus_id=idval)
+    cvquery = CV.query.order_by(CV.reference).filter_by(cvstatus_id=idval[0][0])
 
-    return render_template('cvquery.html', cvquery=cvquery)
+    return render_template('cvquery.html', cvquery=cvquery, idval=idval)
 
 
 @app.route('/rolequery')
