@@ -21,6 +21,7 @@
       <th scope="col">Status</th>
       <th scope="col">Date Entered</th>
       <th scope="col"></th>
+      <th scope="col"></th>
     </tr>
   </thead>
 
@@ -34,6 +35,7 @@
         <td> {{ cv.cvstatus.name }} </td>
         <td> {{ cv.date_entered.strftime('%Y-%m-%d') }} </td>
         <td> <a href="{{ url_for('cv_edit', cv_id=cv.id) }}" class="btn btn-light" role="edit" >Edit</a> </td>
+        <td> <a href="{{ url_for('cv_history', cv_id=cv.id) }}" class="btn btn-light" role="history" >History</a> </td>
       </tr>     
     {% endfor %}
   </tbody>

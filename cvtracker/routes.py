@@ -33,6 +33,11 @@ def cv_list():
         cvs = CV.query.order_by(CV.reference)
     return render_template('cvlist.html', cvs=cvs)
 
+@app.route("/cvhistory/<int:cv_id>")
+def cv_history(cv_id):
+    cvs = Statuschange.query.order_by(Statuschange.id).filter_by(cv_id=cv_id)
+    return render_template('cvhistory.html', cvs=cvs)
+
 @app.route('/cventry', methods=['GET', 'POST'])
 def cv_entry():
 

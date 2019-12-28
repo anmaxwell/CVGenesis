@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block header %}
+  <nav class="navbar navbar-light bg-light">
+    <span class="navbar-brand text-primary h1">CV History</span>
+    <form class="form-inline">
+    </form>
+  </nav>
+{% endblock header %}
+
+{% block content %}
+
+<table class="table table-striped" id="cvhistory">
+  <thead>
+    <tr>
+      <th scope="col">CV Reference</th>
+      <th scope="col">Date Changed</th>
+      <th scope="col">Status from</th>
+      <th scope="col">CV Entered</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for cv in cvs %}
+      <tr>
+        <!-- Loop each CV field -->
+        <td> {{ cv.cvchange.reference }} </td>
+        <td> {{ cv.date_changed.strftime('%Y-%m-%d') }} </td>
+        <td> {{ cv.statuschange.name }} </td>
+        <td> {{ cv.cvchange.date_entered.strftime('%Y-%m-%d') }} </td>
+      </tr>     
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock content %}
