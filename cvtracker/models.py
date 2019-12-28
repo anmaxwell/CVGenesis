@@ -21,6 +21,7 @@ class CV(db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable=False)
     source_id = db.Column(db.Integer, db.ForeignKey('source.id'), nullable=False)
     cvstatus_id = db.Column(db.Integer, db.ForeignKey('cvstatus.id'), nullable=False)
+    cvchange = db.relationship('Statuschange', backref="cvchange", lazy=True)
 
     def __repr__(self):
         return f"CV('{self.reference}', '{self.date_entered})"
@@ -46,6 +47,7 @@ class Cvstatus(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), nullable=False)
     cvstatus = db.relationship('CV', backref="cvstatus", lazy=True)
+    statuschange = db.relationship('Statuschange', backref="statuschange", lazy=True)
 
     def __repr__(self):
         return f"CVStatus(#{self.id}, '{self.name}')"
@@ -57,3 +59,12 @@ class Rolestatus(db.Model):
 
     def __repr__(self):
         return f"RoleStatus(#{self.id}, '{self.name}')"
+
+class Statuschange(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date_changed = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    status_id = db.Column(db.Integer, db.ForeignKey('cvstatus.id'), nullable=False)
+    cv_id = db.Column(db.Integer, db.ForeignKey('CV.id'), nullable=False)
+
+    def __repr__(self):
+        return f"Status Changes"

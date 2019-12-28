@@ -1,5 +1,5 @@
 from cvtracker import app, db
-from cvtracker.models import CV, Hirer, Role, Source, Cvstatus, Rolestatus
+from cvtracker.models import CV, Hirer, Role, Source, Cvstatus, Rolestatus, Statuschange
 from cvtracker.forms import MgrEntry, RoleEntry, CVEntry, SourceEntry, CVStatus, RoleStatus
 from users import get_users
 from flask import render_template, request, redirect, url_for, flash, json
@@ -60,12 +60,19 @@ def cv_edit(cv_id):
     form.source.choices = [(source.id, source.name) for source in Source.query.order_by(Source.name).all()]
     form.cvstatus.choices = [(cvstatus.id, cvstatus.name) for cvstatus in Cvstatus.query.order_by(Cvstatus.name).all()]
     if form.validate_on_submit():
+
+        if cvedit.cvstatus_id != form.cvstatus.data:
+
+            cvchange = Statuschange(status_id=cvedit.cvstatus_id, cv_id=cv_id)
+            db.session.add(cvchange)
+
         cvedit.reference = form.reference.data
         cvedit.cv_notes = form.cvnotes.data
         cvedit.cvstatus_id = form.cvstatus.data
         cvedit.date_entered = form.date_entered.data
         cvedit.role_id = form.role.data
         cvedit.source_id = form.source.data
+
         db.session.commit()
         flash("Successfully Updated", 'success')
         return redirect(url_for('cv_list'))

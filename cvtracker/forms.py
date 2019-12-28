@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, SelectField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired
-from cvtracker.models import CV, Hirer, Role, Source, Cvstatus, Rolestatus
+from cvtracker.models import CV, Hirer, Role, Source, Cvstatus, Rolestatus, Statuschange
 
 
 class MgrEntry(FlaskForm):
