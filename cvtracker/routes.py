@@ -36,7 +36,10 @@ def cv_list():
 @app.route("/cvhistory/<int:cv_id>")
 def cv_history(cv_id):
     cvs = Statuschange.query.order_by(Statuschange.id).filter_by(cv_id=cv_id)
-    return render_template('cvhistory.html', cvs=cvs)
+    cv_query = db.session.query(CV.reference, CV.date_entered).filter_by(id=cv_id).first()
+    cv_ref = cv_query[0]
+    cv_date = cv_query[1]
+    return render_template('cvhistory.html', cvs=cvs, cv_ref=cv_ref, cv_date=cv_date)
 
 @app.route('/cventry', methods=['GET', 'POST'])
 def cv_entry():
