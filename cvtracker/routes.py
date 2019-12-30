@@ -35,11 +35,23 @@ def cv_list():
 
 @app.route("/cvhistory/<int:cv_id>")
 def cv_history(cv_id):
-    cvs = Statuschange.query.order_by(Statuschange.id).filter_by(cv_id=cv_id)
+    cvs = Statuschange.query.order_by(Statuschange.id).filter_by(cv_id=cv_id).all()
+    cvlist = []
+    for item in cvs:
+        cvlist.append({'date':item.date_changed, 'statusfrom':item.statuschange.name, 'statusto':None})
+
+    idx = 0
+    for row in cvlist:
+        while idx < len(cvlist)-1:
+            cvlist[idx]["statusto"] = cvlist[idx+1]["statusfrom"]
+            idx += 1
+ 
+    cvlist[idx]["statusto"] = db.session.query(CV).get(cv_id).cvstatus.name
+
     cv_query = db.session.query(CV.reference, CV.date_entered).filter_by(id=cv_id).first()
     cv_ref = cv_query[0]
     cv_date = cv_query[1]
-    return render_template('cvhistory.html', cvs=cvs, cv_ref=cv_ref, cv_date=cv_date)
+    return render_template('cvhistory.html', cvs=cvs, cv_ref=cv_ref, cv_date=cv_date, cvlist=cvlist)
 
 @app.route('/cventry', methods=['GET', 'POST'])
 def cv_entry():

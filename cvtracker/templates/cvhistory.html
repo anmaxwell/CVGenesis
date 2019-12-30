@@ -6,6 +6,7 @@
     <form class="form-inline">
     </form>
   </nav>
+
 {% endblock header %}
 
 {% block content %}
@@ -15,15 +16,17 @@
     <tr>
       <th scope="col">Date Changed</th>
       <th scope="col">Status From</th>
+      <th scope="col">Status To</th>
     </tr>
   </thead>
 
   <tbody>
-    {% for cv in cvs %}
+    {% for cv in cvlist %}
       <tr>
         <!-- Loop each CV field -->
-        <td> {{ cv.date_changed.strftime('%d-%m-%Y') }} </td>
-        <td> {{ cv.statuschange.name }} </td>
+        <td> {{ cv.date.strftime('%d-%m-%Y') }} </td>
+        <td> {{ cv.statusfrom }} </td>
+        <td> {{ cv.statusto }} </td>
       </tr>     
     {% endfor %}
   </tbody>
