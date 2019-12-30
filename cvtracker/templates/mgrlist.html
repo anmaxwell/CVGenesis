@@ -16,7 +16,6 @@
   <thead>
     <tr>
       <th scope="col">Name</th>
-      <th scope="col">Status</th>
     </tr>
   </thead>
   
@@ -24,11 +23,6 @@
     {% for mgr in mgrs %}
       <tr>
           <td> {{ mgr.name }} </td>
-          <td> {{ mgr.status }} </td>
-          <td><div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input" id="customSwitch1">
-              <label class="custom-control-label" for="customSwitch1"></label>
-            </div></td>
       </tr>
     {% endfor %}
   </tbody>

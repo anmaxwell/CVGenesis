@@ -2,7 +2,7 @@
 
 {% block header %}
   <nav class="navbar navbar-light bg-light">
-    <span class="navbar-brand text-primary h1">CV History: Reference {{ cv_ref }} Created {{ cv_date.strftime('%Y-%m-%d') }}</span>
+    <span class="navbar-brand text-primary h1">CV History: Reference {{ cv_ref }} Created {{ cv_date.strftime('%d-%m-%Y') }}</span>
     <form class="form-inline">
     </form>
   </nav>
@@ -22,7 +22,7 @@
     {% for cv in cvs %}
       <tr>
         <!-- Loop each CV field -->
-        <td> {{ cv.date_changed.strftime('%Y-%m-%d') }} </td>
+        <td> {{ cv.date_changed.strftime('%d-%m-%Y') }} </td>
         <td> {{ cv.statuschange.name }} </td>
       </tr>     
     {% endfor %}
