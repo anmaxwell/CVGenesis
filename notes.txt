@@ -142,3 +142,17 @@ def cvquery():
     idval =  db.session.query(Cvstatus.id).filter_by(name=idname).all() **uses the name passed in the url to query the database filtered on the name 
     cvquery = CV.query.order_by(CV.reference).filter_by(cvstatus_id=idval[0][0]) **filters the cv table based on the statusid taken from the query on the url 
     return render_template('cvquery.html', cvquery=cvquery, idval=idval)
+
+
+Chart.js - used for creating the charts on the home page.  The documentation was very lacking and not very much help on line on 
+ how to do things like the click through, having the graphs side by side or be able to dynamically choose the colour set.  
+ Basics were simple - so actually putting the chart on the page and adding the legends etc.
+
+Flask 1.1.1 - really easy and nice to use.  Found a very useful tutorial from Corey Schafer which went through all the basics and
+ was easy to implement.
+
+SQLAlchemy 2.4.1 - very helpful with setting up a database given i've never done it before.  Tricky to get my head round the joins - 
+ although seems straight forward, I got confused a couple of times and it took a while to work through where I was going wrong.
+
+WTForms 2.2.1 - very easy to use and again managed to pick up straight after watching tutorial.  Easy to understand what it's doing
+ and make changes.
