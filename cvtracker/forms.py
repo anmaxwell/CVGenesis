@@ -1,9 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, SelectField
+from wtforms import StringField, SubmitField, TextAreaField, SelectField, PasswordField
 from wtforms.fields.html5 import DateField
-from wtforms.validators import DataRequired
-from cvtracker.models import CV, Hirer, Role, Source, Cvstatus, Rolestatus, Statuschange
-
+from wtforms.validators import DataRequired, Email
+from cvtracker.models import CV, Hirer, Role, Source, Cvstatus, Rolestatus, Statuschange, User
 
 class MgrEntry(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
@@ -37,3 +36,9 @@ class CVStatus(FlaskForm):
 class RoleStatus(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+class LoginForm(FlaskForm):
+    email = StringField('Email',
+                        validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Login')

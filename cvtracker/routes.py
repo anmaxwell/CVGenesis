@@ -1,13 +1,35 @@
-from cvtracker import app, db
-from cvtracker.models import CV, Hirer, Role, Source, Cvstatus, Rolestatus, Statuschange
-from cvtracker.forms import MgrEntry, RoleEntry, CVEntry, SourceEntry, CVStatus, RoleStatus
+from cvtracker import app, db, bcrypt
+from cvtracker.models import CV, Hirer, Role, Source, Cvstatus, Rolestatus, Statuschange, User
+from cvtracker.forms import MgrEntry, RoleEntry, CVEntry, SourceEntry, CVStatus, RoleStatus, LoginForm
 from users import get_users
 from flask import render_template, request, redirect, url_for, flash, json
+from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import func, distinct 
 import urllib.parse
 
-@app.route('/')
+
+@app.route("/", methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user)
+            return redirect(url_for('index'))
+        else:
+            flash('Login Unsuccessful. Please check email and password', 'danger')
+    return render_template('login.html', form=form)
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+
 @app.route('/home')
+@login_required
 def index():
     cvcount = db.session.query(CV.cvstatus_id, Cvstatus.name, func.count(CV.cvstatus_id)).group_by(CV.cvstatus_id).join(Cvstatus).all()
     cvchartdata = {'labels': [], 'data': []}
@@ -25,6 +47,7 @@ def index():
     return render_template('home.html', convcvcount=convcvcount, convrolecount=convrolecount)
 
 @app.route('/cvlist')
+@login_required
 def cv_list():
     if request.args:
         args = request.args.get('role')
@@ -34,11 +57,13 @@ def cv_list():
     return render_template('cvlist.html', cvs=cvs)
 
 @app.route("/cvhistory/<int:cv_id>")
+@login_required
 def cv_history(cv_id):
     cvs = Statuschange.query.order_by(Statuschange.id).filter_by(cv_id=cv_id)
     return render_template('cvhistory.html', cvs=cvs)
 
 @app.route('/cventry', methods=['GET', 'POST'])
+@login_required
 def cv_entry():
 
     form = CVEntry()
@@ -56,6 +81,7 @@ def cv_entry():
 
 
 @app.route("/cvedit/<int:cv_id>/update", methods=['GET', 'POST'])
+@login_required
 def cv_edit(cv_id):
 
     cvedit=CV.query.get(cv_id)
@@ -94,11 +120,13 @@ def cv_edit(cv_id):
     return render_template('cventry.html',form=form, legend='Update CV')
     
 @app.route('/mgrlist')
+@login_required
 def mgr_list():
     mgrs = Hirer.query.order_by(Hirer.status)
     return render_template('mgrlist.html', mgrs=mgrs)
 
 @app.route('/mgrentry', methods=['GET', 'POST'])
+@login_required
 def mgr_entry():
 
     form = MgrEntry()
@@ -111,11 +139,13 @@ def mgr_entry():
     return render_template('mgrentry.html', form=form)
 
 @app.route('/rolelist')
+@login_required
 def role_list():
     roles = Role.query.order_by(Role.title)
     return render_template('rolelist.html', roles=roles)
 
 @app.route('/roleentry', methods=['GET', 'POST'])
+@login_required
 def role_entry():
 
     form = RoleEntry()
@@ -131,6 +161,7 @@ def role_entry():
     return render_template('roleentry.html', form=form, legend='Add new role')
 
 @app.route("/roleedit/<int:role_id>/update", methods=['GET', 'POST'])
+@login_required
 def role_edit(role_id):
 
     roleedit=Role.query.get(role_id)
@@ -159,6 +190,7 @@ def role_edit(role_id):
     return render_template('roleentry.html',form=form, legend='Update role')
 
 @app.route('/addsource', methods=['GET', 'POST'])
+@login_required
 def add_source():
 
     sources = Source.query.order_by(Source.name)
@@ -172,6 +204,7 @@ def add_source():
     return render_template('sourceentry.html', form=form, sources=sources)
 
 @app.route('/cvstatus', methods=['GET', 'POST'])
+@login_required
 def cv_status():
 
     statuses = Cvstatus.query.order_by(Cvstatus.name)
@@ -185,6 +218,7 @@ def cv_status():
     return render_template('cvstatus.html', form=form, statuses=statuses)
 
 @app.route('/rolestatus', methods=['GET', 'POST'])
+@login_required
 def role_status():
 
     statuses = Rolestatus.query.order_by(Rolestatus.name)
@@ -199,6 +233,7 @@ def role_status():
 
 
 @app.route('/cvquery')
+@login_required
 def cvquery():
 
     idname = urllib.parse.unquote(request.args.get('id'))
@@ -209,6 +244,7 @@ def cvquery():
 
 
 @app.route('/rolequery')
+@login_required
 def rolequery():
 
     idname = urllib.parse.unquote(request.args.get('id'))
