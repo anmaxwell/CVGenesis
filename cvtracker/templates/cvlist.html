@@ -33,7 +33,7 @@
         <td> {{ cv.role.title }} </td>
         <td> {{ cv.role.mgrrole.name }} </td>
         <td> {{ cv.cvstatus.name }} </td>
-        <td> {{ cv.date_entered.strftime('%Y-%m-%d') }} </td>
+        <td> {{ cv.date_entered.strftime('%d-%m-%Y') }} </td>
         <td> <a href="{{ url_for('cv_edit', cv_id=cv.id) }}" class="btn btn-light" role="edit" >Edit</a> </td>
         <td> <a href="{{ url_for('cv_history', cv_id=cv.id) }}" class="btn btn-light" role="history" >History</a> </td>
       </tr>     

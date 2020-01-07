@@ -1,0 +1,158 @@
+HTML Templates:
+
+cventry - creates a form to enter in CV details and validates fields.
+
+cvhistory - displays a list of the status changes for the specified CV
+
+cvlist - table to show list of all CVs.  Table come with pagination, search and sort.
+
+cvquery - displays the results of the click through from the pie charts.  takes {{ cv.reference }} (the reference from the CV),  {{ cv.role.title }} (the role title from the role table as CV table is linked to role table), {{ cv.role.mgrrole.name }} (the name of the manager from the manager table as CV table is linked to role table and the role table is linked to the manager table), 
+
+cvstatus - lists the existing statuses set up for the CVs and allows you to add a new status
+
+home - uses chart.js to display 2 pie charts. var data = {{ convcvcount|safe }} reads the labels and data as a dictionary to use in the charts.  labels: data.labels,  and data: data.data
+
+layout - standard settings, stylesheets, javascript and plugins across all pages with navbar (links within bar and dropdown)
+
+mgrentry - creates a form to enter new hiring managers
+
+mgrlist - table to show list of all managers.  Table come with pagination, search and sort.
+
+roleentry - creates a form to enter in role details and validates fields.
+
+rolelist - table to show list of all roles.  Table come with pagination, search and sort.
+
+roleqquery - displays the results of the click through from the pie charts. 
+
+rolestatus - lists the existing statuses set up for the CVs and allows you to add a new status
+
+sourceentry - creates a form to enter in role details and validates fields.
+
+WTForms:
+
+Tables and fields for the forms. role = SelectField(u'Role', choices=[], coerce=int) means this will be a drop down.  choices=[] you can set the choices here as predefined or set them when the field is used. coerce=int ensures the field is an integer 
+
+validators=[DataRequired()] there are a number of validators available to check the field input. 
+
+Models:
+
+This is what forms the tables and fields in the database.  Standard field information db.Integer, db.String(60), db.DateTime
+
+You can join tables by entering a link across 2 tables: 
+mgr_id = db.Column(db.Integer, db.ForeignKey('hirer.id'), nullable=False) from the role table and  role = db.relationship('Role', backref="mgrrole", lazy=True) from the hirer table. 
+This shows a relationship from the role table to the hirer table. The ‘backref’ is a way to call the link using a relevant name.
+
+Each table also reports back on the basics if the table is called:
+def __repr__(self):
+    return f"CV('{self.reference}', '{self.date_entered})" This will return the reference and the date created for each CV if the CV table is called.
+ 
+Routes:
+
+This defines what happens on each page.
+
+def index():
+    cvcount = db.session.query(CV.cvstatus_id, Cvstatus.name, func.count(CV.cvstatus_id)).group_by(CV.cvstatus_id).join(Cvstatus).all() **Queries database to get the status name and cv ID then counts the instances of the ID then groups by it.  Joins the CV and Cvstatus table to get the status name.
+    cvchartdata = {'labels': [], 'data': []} 
+    for item in cvcount: **Loops through the results of the query to populate the dictionary for the data and the labels 
+        cvchartdata['labels'].append(item[1])
+        cvchartdata['data'].append(item[2])
+    convcvcount = json.dumps(cvchartdata) **Puts the results to JSON so the javascript can read it for the pie charts
+
+def cv_list():
+    if request.args: **Checks to see if there are any query parameters
+        args = request.args.get('role') **Pulls out the value for the ‘role’ argument
+        cvs = CV.query.order_by(CV.reference).filter_by(role_id=args) **Gets all the CVs in the database then filters by the ID from the query parameter.
+    else:
+        cvs = CV.query.order_by(CV.reference) **Queries the database for all CVs and orders them by reference 
+    return render_template('cvlist.html', cvs=cvs)
+
+def cv_history(cv_id):
+    cvs = Statuschange.query.order_by(Statuschange.id).filter_by(cv_id=cv_id).all() **Queries the statuschange table and filters by the cv ID provided 
+    cvlist = []
+    for item in cvs:  **Loops through the results and puts the date and status from the table into a dictionary 
+        cvlist.append({'date':item.date_changed, 'statusfrom':item.statuschange.name, 'statusto':None})
+    idx = 0
+    for row in cvlist:  **Loops through and adds the status from the following row to show what the status has changed to 
+        while idx < len(cvlist)-1:
+            cvlist[idx]["statusto"] = cvlist[idx+1]["statusfrom"]
+            idx += 1
+    cvlist[idx]["statusto"] = db.session.query(CV).get(cv_id).cvstatus.name  **Adds the current status to the last row to show what the status is now
+    cv_query = db.session.query(CV.reference, CV.date_entered).filter_by(id=cv_id).first() **Gets the reference and date from the CV table for the cv ID 
+    cv_ref = cv_query[0]
+    cv_date = cv_query[1]
+    return render_template('cvhistory.html', cvs=cvs, cv_ref=cv_ref, cv_date=cv_date, cvlist=cvlist)
+
+def cv_entry():
+    form = CVEntry()
+    form.role.choices = [(role.id, role.title) for role in Role.query.order_by(Role.title).all()]  **Creates the options for the role drop down
+    form.source.choices = [(source.id, source.name) for source in Source.query.order_by(Source.name).all()] **Creates the options for the source drop down
+    form.cvstatus.choices = [(cvstatus.id, cvstatus.name) for cvstatus in Cvstatus.query.order_by(Cvstatus.name).all()] **Creates the options for the status drop down
+    if form.validate_on_submit():
+        cv = CV(reference=form.reference.data, cvstatus_id=form.cvstatus.data, cv_notes=form.cvnotes.data, date_entered=form.date_entered.data,
+                        role_id=form.role.data, source_id=form.source.data) **if everything is valid on the form, creates a cv instance from the data
+        db.session.add(cv) **gets the cv instance ready to push to the database
+        db.session.commit() **pushes the cv instance to the database
+        flash("Successfully Added", 'success') **displays a success message
+        return redirect(url_for('cv_entry'))
+    return render_template('cventry.html', form=form, legend='Add new CV')
+
+def cv_edit(cv_id):
+    cvedit=CV.query.get(cv_id) **Creates an instance of cvedit based on the data from the ID provided
+    form = CVEntry()
+    form.role.choices = [(role.id, role.title) for role in Role.query.all()] **Creates the options for the role drop down
+    form.source.choices = [(source.id, source.name) for source in Source.query.order_by(Source.name).all()] **Creates the options for the source drop down
+    form.cvstatus.choices = [(cvstatus.id, cvstatus.name) for cvstatus in Cvstatus.query.order_by(Cvstatus.name).all()] **Creates the options for the status drop down
+    if form.validate_on_submit(): **Checks the details on the form are valid
+        if cvedit.cvstatus_id != form.cvstatus.data: **Looks to see if the status has changed
+            cvchange = Statuschange(status_id=cvedit.cvstatus_id, cv_id=cv_id) **If the status has changed creates a new instance of the status changing
+            db.session.add(cvchange) **gets the status change instance ready to push to the database
+        cvedit.reference = form.reference.data **updates the cvedit instance with the data from the form
+        cvedit.cv_notes = form.cvnotes.data
+        cvedit.cvstatus_id = form.cvstatus.data
+        cvedit.date_entered = form.date_entered.data
+        cvedit.role_id = form.role.data
+        cvedit.source_id = form.source.data
+        db.session.commit() **pushes the cvedit instance and the status change instance to the database
+        flash("Successfully Updated", 'success')
+        return redirect(url_for('cv_list'))
+    elif request.method == 'GET': **populates the form with the data from the cvedit instance 
+        form.reference.data = cvedit.reference
+        form.cvnotes.data = cvedit.cv_notes
+        form.date_entered.data = cvedit.date_entered
+        form.role.data = cvedit.role_id
+        form.source.data = cvedit.source_id
+        form.role.data = cvedit.role_id
+        form.cvstatus.data = cvedit.cvstatus_id
+    return render_template('cventry.html',form=form, legend='Update CV')
+
+
+def cv_status():
+    statuses = Cvstatus.query.order_by(Cvstatus.name)
+    form = CVStatus()
+    if form.validate_on_submit(): **checks the data is valid
+        statusname = Cvstatus(name=form.name.data) **creates an instance of the new status baed on the information on the form
+        db.session.add(statusname) **gets the instance ready to push
+        db.session.commit() **pushes the new status to the database 
+        flash("Successfully Added", 'success')
+        return redirect(url_for('cv_status'))
+    return render_template('cvstatus.html', form=form, statuses=statuses)
+
+def cvquery():
+    idname = urllib.parse.unquote(request.args.get('id’))**reads the url and finds the parameter for the ‘id’ reference 
+    idval =  db.session.query(Cvstatus.id).filter_by(name=idname).all() **uses the name passed in the url to query the database filtered on the name 
+    cvquery = CV.query.order_by(CV.reference).filter_by(cvstatus_id=idval[0][0]) **filters the cv table based on the statusid taken from the query on the url 
+    return render_template('cvquery.html', cvquery=cvquery, idval=idval)
+
+
+Chart.js - used for creating the charts on the home page.  The documentation was very lacking and not very much help on line on 
+ how to do things like the click through, having the graphs side by side or be able to dynamically choose the colour set.  
+ Basics were simple - so actually putting the chart on the page and adding the legends etc.
+
+Flask 1.1.1 - really easy and nice to use.  Found a very useful tutorial from Corey Schafer which went through all the basics and
+ was easy to implement.
+
+SQLAlchemy 2.4.1 - very helpful with setting up a database given i've never done it before.  Tricky to get my head round the joins - 
+ although seems straight forward, I got confused a couple of times and it took a while to work through where I was going wrong.
+
+WTForms 2.2.1 - very easy to use and again managed to pick up straight after watching tutorial.  Easy to understand what it's doing
+ and make changes.

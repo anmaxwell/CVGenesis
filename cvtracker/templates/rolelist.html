@@ -29,7 +29,7 @@
       <tr>
         <td> {{ role.title }} </td>
         <td> {{ role.mgrrole.name }} </td>
-        <td> {{ role.date_opened.strftime('%Y-%m-%d') }} </td>
+        <td> {{ role.date_opened.strftime('%d-%m-%Y') }} </td>
         <td> {{ role.rolestatus.name }} </td>
         <td> <a href="/cvlist?role={{role.id}}" class="btn btn-light" role="cvs" >CVs</a></td>
         <td> <a href="{{ url_for('role_edit', role_id=role.id) }}" class="btn btn-light" role="edit" >Edit</a> </td>
