@@ -8,11 +8,11 @@ We don't have a single, easy to use tool for seeing what CVs have come in for wh
 
 ## Technologies Used
 
-Python
-bcrypt 3.1.7
-Flask 1.1.1
-Flask-SQLAlchemy 2.4.1
-Flask-WTF 0.14.2
-Jinja2 2.10.3
-SQLAlchemy 1.3.11
-WTForms 2.2.1
+| Tech   | Version | Used For                                                          |
+|--------|---------|-------------------------------------------------------------------|
+| Python | 3.3*    | main language                                                     |
+| Flask  | 1.1.*   | Framework for web used for routing, controllers, models and views |
+| bcrypt  | 3.1.*   | Hashing algorithm for password storage  |
+| SQLAlchemy  | 1.1.*   | ORM  |
+| Jinja2  | 2.10.*   | Templating engine |
+| WTForms  | 2.2.*   | Forms validation and rendering library|
